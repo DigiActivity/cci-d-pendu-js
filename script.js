@@ -1,15 +1,35 @@
 let motSecret = []
 let indice = undefined
 
+let motHTML = document.querySelector('div.mot-cache')
+
+function actualiseMot () {
+    // vider les caractères dans motHTML
+    motHTML.innerHTML = ""
+    // pour chaque obj dans motSecret
+    motSecret.forEach(objLettre => {
+		// si lettre trouvée : on affiche lettre
+        if (objLettre.trouvee === true) {
+            motHTML.innerHTML += "<span>" + objLettre.lettre + '</span>'
+        }
+		// sinon : on affiche -
+        else {
+            motHTML.innerHTML += "<span>_</span>"
+        }
+	})
+}
+
 fetch('https://trouve-mot.fr/api/random').then(r => r.json()).then(d => {
 
+    console.log(d)
+
     const mesLettres = d[0].name.split("")
+    console.log(mesLettres)
 
     motSecret = mesLettres.map((lettre) => {
         return { lettre: lettre, trouvee: false }
     })
-
-    console.log(motSecret)
+    actualiseMot()
 
     indice = d[0].categorie
     document.querySelector('.indice').innerHTML = indice
@@ -19,10 +39,19 @@ fetch('https://trouve-mot.fr/api/random').then(r => r.json()).then(d => {
     formulaireLettre.addEventListener('submit', (e) => {
         // empêcher le rechargement de la page
         e.preventDefault()
-        console.log("test")
         // récupérer les données du formulaire
         const data = new FormData(e.target)
         const lettre = data.get("lettre")
         console.log("Ma lettre :", lettre)
+
+        // si la lettre correspond à une lettre dans motSecret,
+        // on va mettre la lettre en "trouvée"
+
+        motSecret.forEach(objLettre => {
+            if (lettre === objLettre.lettre) {
+                objLettre.trouvee = true
+            }
+        })
+        actualiseMot()
     })
 })
