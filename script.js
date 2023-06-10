@@ -1,5 +1,6 @@
 let motSecret = []
 let indice = undefined
+let nbLettreTrouvees = 0
 
 let motHTML = document.querySelector('div.mot-cache')
 
@@ -48,10 +49,15 @@ fetch('https://trouve-mot.fr/api/random').then(r => r.json()).then(d => {
         // on va mettre la lettre en "trouvée"
 
         motSecret.forEach(objLettre => {
-            if (lettre === objLettre.lettre) {
+            if (lettre === objLettre.lettre && objLettre.trouvee === false) {
                 objLettre.trouvee = true
+                nbLettreTrouvees ++
             }
         })
         actualiseMot()
+        
+        if (nbLettreTrouvees === motSecret.length) {
+            alert('VICTOIRE')
+        }
     })
 })
