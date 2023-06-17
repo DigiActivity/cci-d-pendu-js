@@ -55,7 +55,7 @@ fetch('https://trouve-mot.fr/api/random').then(r => r.json()).then(d => {
             }
         })
         actualiseMot()
-        
+
         if (nbLettreTrouvees === motSecret.length) {
             alert('VICTOIRE')
         }
