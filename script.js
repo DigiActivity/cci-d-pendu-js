@@ -4,6 +4,7 @@ let indice = undefined
 let nbLettreTrouvees = 0
 
 let motHTML = document.querySelector('div.mot-cache')
+let historiqueHTML = document.querySelector('p.historique')
 
 function actualiseMot () {
     // vider les caractères dans motHTML
@@ -19,6 +20,10 @@ function actualiseMot () {
             motHTML.innerHTML += "<span>_</span>"
         }
 	})
+}
+
+function actualiseHistorique() {
+    historiqueHTML.innerHTML = historique.join(", ")
 }
 
 fetch('https://trouve-mot.fr/api/random').then(r => r.json()).then(d => {
@@ -52,6 +57,7 @@ fetch('https://trouve-mot.fr/api/random').then(r => r.json()).then(d => {
             // on ajoute la lettre à l'historique
             historique.push(lettre)
             console.log(historique)
+            actualiseHistorique()
             // si la lettre correspond à une lettre dans motSecret,
             // on va mettre la lettre en "trouvée"
             motSecret.forEach(objLettre => {
