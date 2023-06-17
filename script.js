@@ -1,4 +1,5 @@
 let motSecret = []
+let historique = []
 let indice = undefined
 let nbLettreTrouvees = 0
 
@@ -44,20 +45,29 @@ fetch('https://trouve-mot.fr/api/random').then(r => r.json()).then(d => {
         const data = new FormData(e.target)
         const lettre = data.get("lettre")
         console.log("Ma lettre :", lettre)
+        
+        if (historique.includes(lettre)) {
+            console.log("La lettre est déjà proposée.")
+        } else {
+            // on ajoute la lettre à l'historique
+            historique.push(lettre)
+            console.log(historique)
+            // si la lettre correspond à une lettre dans motSecret,
+            // on va mettre la lettre en "trouvée"
+            motSecret.forEach(objLettre => {
+                if (lettre === objLettre.lettre && objLettre.trouvee === false) {
+                    objLettre.trouvee = true
+                    nbLettreTrouvees ++
+                }
+            })
+            actualiseMot()
 
-        // si la lettre correspond à une lettre dans motSecret,
-        // on va mettre la lettre en "trouvée"
-
-        motSecret.forEach(objLettre => {
-            if (lettre === objLettre.lettre && objLettre.trouvee === false) {
-                objLettre.trouvee = true
-                nbLettreTrouvees ++
+            if (nbLettreTrouvees === motSecret.length) {
+                alert('VICTOIRE')
             }
-        })
-        actualiseMot()
-
-        if (nbLettreTrouvees === motSecret.length) {
-            alert('VICTOIRE')
         }
+        
+        // on supprime le contenu du formulaire (de l'input)
+        e.target.querySelector('input').value = ''
     })
 })
